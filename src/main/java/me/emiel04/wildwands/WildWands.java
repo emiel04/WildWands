@@ -1,6 +1,5 @@
 package me.emiel04.wildwands;
 
-import me.emiel04.wildwands.commands.Tescommand;
 import me.emiel04.wildwands.commands.WildWandCommand;
 import me.emiel04.wildwands.commands.commandmanagerlib.argumentmatchers.ContainingStringIArgumentMatcher;
 import me.emiel04.wildwands.config.Lang;
@@ -68,8 +67,7 @@ public final class WildWands extends JavaPlugin {
     private void initializeWands() {
         List<Wand> wands = new ArrayList<>(Arrays.asList(
                 Wand.createWand(WandType.SMELT_WAND),
-                Wand.createWand(WandType.CONDENSE_WAND),
-                Wand.createWand(WandType.BUILD_WAND)
+                Wand.createWand(WandType.CONDENSE_WAND)
         ));
 
         if (essentialsAndVaultLoaded){
@@ -82,7 +80,6 @@ public final class WildWands extends JavaPlugin {
     }
 
     private void addCommandsAndListeners() {
-        this.getCommand("test").setExecutor(new Tescommand());
         this.getCommand("wildwands").setExecutor(new WildWandCommand(LangConfig.get(Lang.NO_PERM), new ContainingStringIArgumentMatcher()));
 
     }

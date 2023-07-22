@@ -40,7 +40,6 @@ public class SellWand extends Wand {
     public void onClick(PlayerInteractEvent event) {
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) return;
-        if (!(clickedBlock.getState() instanceof Container)) return;
 
         ItemStack item = event.getItem();
         if (item == null) return;
@@ -61,6 +60,7 @@ public class SellWand extends Wand {
         }
 
         event.setCancelled(true);
+        if (!(clickedBlock.getState() instanceof Container)) return;
 
         int uses = pdc.get(getUsesKey(), PersistentDataType.INTEGER);
         if (uses == 0) {

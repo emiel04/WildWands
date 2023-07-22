@@ -36,14 +36,12 @@ public class CondenseWand extends Wand {
     public void onClick(PlayerInteractEvent event) {
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) return;
-        if (!(clickedBlock.getState() instanceof Container)) return;
 
         ItemStack item = event.getItem();
         if (item == null) return;
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         Player p = event.getPlayer();
-
         NamespacedKey idKey = getIdKey();
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
         String ukey = pdc.get(idKey, PersistentDataType.STRING);
@@ -55,6 +53,7 @@ public class CondenseWand extends Wand {
         }
 
         event.setCancelled(true);
+        if (!(clickedBlock.getState() instanceof Container)) return;
 
         int uses = pdc.get(getUsesKey(), PersistentDataType.INTEGER);
         if (uses == 0) {
