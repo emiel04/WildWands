@@ -10,7 +10,9 @@ public enum Lang {
     RECEIVED_DUST("received_pixiedust", "You have received %name% with %uses% uses!"),
     GIVEN_DUST("given_pixiedust", "You have given %name% with %uses% uses to %target%!"),
     GIVEN_WAND("given_wand", "You have given %wand% with %uses% uses to %target%!"),
-    SOLD_ITEMS("sold_items", "You have sold the items for &5&l%amount%&r&f!");
+    SOLD_ITEMS("sold_items", "You have sold the items for &5&l%amount%&r&f! Uses left: &5&l%uses%"),
+    SMELTED_ITEMS("smelted_items", "Smelt wand activated! Uses left: &5&l%uses%"),
+    CONDENSED_ITEMS("condensed_items", "Condense wand activated! Uses left: &5&l%uses%");
 
     private final String message;
     private final String key;

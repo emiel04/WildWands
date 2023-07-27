@@ -98,7 +98,6 @@ public abstract class Wand implements Listener {
         }
         return ChatColor.translateAlternateColorCodes('&', text.replace("%uses-left%", strUses));
     }
-
     protected void useWand(Player p, ItemStack itemStack) {
         if (itemStack.getItemMeta() == null) return;
         PersistentDataContainer pdc = itemStack.getItemMeta().getPersistentDataContainer();
@@ -112,6 +111,7 @@ public abstract class Wand implements Listener {
     }
 
     void breakWand(Player p, ItemStack item) {
+        p.playSound(p.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
         MessageSenderUtil.sendMessageWithPrefix(p, LangConfig.get(Lang.WAND_BROKE));
     }
 

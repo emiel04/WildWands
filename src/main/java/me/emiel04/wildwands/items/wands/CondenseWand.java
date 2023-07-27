@@ -66,7 +66,7 @@ public class CondenseWand extends Wand {
         useWand(p, item);
         Container container = (Container) clickedBlock.getState();
         condenseAll(container.getInventory());
-        playSuccess(clickedBlock);
+        playSuccess(clickedBlock, p, uses);
     }
 
     private void condenseAll(Inventory inventory) {
@@ -77,13 +77,18 @@ public class CondenseWand extends Wand {
 
     }
 
-    private void playSuccess(Block block) {
+    private void playSuccess(Block block, Player player, int uses) {
+
+
         if (block == null) return;
         World world = block.getWorld();
         world.playSound(block.getLocation(), Sound.BLOCK_ANVIL_USE, SoundCategory.BLOCKS, 1, 1);
         double[] o = BlockUtil.getBlockParticleOffsets();
         world.spawnParticle(Particle.BLOCK_CRACK, BlockUtil.getBlockCenterLocation(block), 5, o[0],  o[1],  o[2], 0.01, Material.ANVIL.createBlockData());
         world.spawnParticle(Particle.SMOKE_LARGE, BlockUtil.getBlockCenterLocation(block), 5, o[0],  o[1],  o[2], 0.01);
+        if (uses == 0) return;
+        MessageSenderUtil.sendMessageWithPrefix(player, LangConfig.get(Lang.SMELTED_ITEMS)
+                .replace("%uses%", String.valueOf(uses)));
     }
 
     private BlockIngotCalculation getBlocks(ItemStack[] itemStacks) {

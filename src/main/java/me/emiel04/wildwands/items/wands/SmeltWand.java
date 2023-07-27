@@ -69,15 +69,20 @@ public class SmeltWand extends Wand {
         useWand(p, item);
         Container container = (Container) clickedBlock.getState();
         smeltAll(container.getInventory());
-        playSuccess(clickedBlock);
+        playSuccess(clickedBlock, p, uses -1);
     }
 
-    private void playSuccess(Block block) {
+    private void playSuccess(Block block, Player player, int uses) {
+
+
         World world = block.getWorld();
         world.playSound(block.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1, 1);
         double[] o = BlockUtil.getBlockParticleOffsets();
         world.spawnParticle(Particle.FLAME, BlockUtil.getBlockCenterLocation(block), 5, o[0],  o[1],  o[2], 0.01);
         world.spawnParticle(Particle.SMOKE_LARGE, BlockUtil.getBlockCenterLocation(block), 5, o[0],  o[1],  o[2], 0.01);
+        if (uses == 0) return;
+        MessageSenderUtil.sendMessageWithPrefix(player, LangConfig.get(Lang.SMELTED_ITEMS)
+                .replace("%uses%", String.valueOf(uses)));
     }
 
     private void smeltAll(Inventory inventory) {

@@ -73,7 +73,7 @@ public class SellWand extends Wand {
         useWand(p, item);
         Container container = (Container) clickedBlock.getState();
         double value = sellAll(p, container.getInventory());
-        playSuccess(clickedBlock, p, value);
+        playSuccess(clickedBlock, p, value, uses - 1);
     }
 
     private double sellAll(Player p, Inventory inventory) {
@@ -100,8 +100,10 @@ public class SellWand extends Wand {
 
 
 
-    private void playSuccess(Block block, Player player, double amount) {
-        MessageSenderUtil.sendMessageWithPrefix(player, LangConfig.get(Lang.SOLD_ITEMS).replace("%amount%", String.valueOf(amount)));
+    private void playSuccess(Block block, Player player, double amount, int uses) {
+        MessageSenderUtil.sendMessageWithPrefix(player, LangConfig.get(Lang.SOLD_ITEMS)
+                .replace("%amount%", String.valueOf(amount))
+                .replace("%uses%", String.valueOf(uses)));
 
         if (block == null) return;
         World world = block.getWorld();
