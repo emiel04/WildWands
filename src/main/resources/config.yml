@@ -3,3 +3,17 @@ main_color: "&5"
 between: " &f| &r"
 accent_color1: "&6"
 error_color: "&c"
+
+# Pixie Dust
+pixiedust:
+  name: PixieDust
+  displayName: "&dPixie &bDust &7(%uses-left%)"
+  material: GLOWSTONE_DUST
+  lore:
+    - "&d=-=-=-=-=-=-=-=-=-="
+    - "&fThis nifty item recharges your wand"
+    - "&fto give it back the magic it once had!"
+    - "&7Use me wisely...."
+    - "&d=-=-=-=-=-=-=-=-=-="
+  glow: true
+

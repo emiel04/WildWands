@@ -7,6 +7,8 @@ public enum Lang {
     WAND_BROKE("wand_broke", "Your wand broke!"),
     BROKEN_WAND("broken_wand", "You can't use a broken wand!"),
     RECEIVED_WAND("received_wand", "You have received %wand% with %uses% uses!"),
+    RECEIVED_DUST("received_pixiedust", "You have received %name% with %uses% uses!"),
+    GIVEN_DUST("given_pixiedust", "You have given %name% with %uses% uses to %target%!"),
     GIVEN_WAND("given_wand", "You have given %wand% with %uses% uses to %target%!"),
     SOLD_ITEMS("sold_items", "You have sold the items for &5&l%amount%&r&f!");
 

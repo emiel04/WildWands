@@ -21,8 +21,8 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.List;
 
 public class BuildWand extends Wand {
-    public BuildWand(String name, String displayName, String ukey, List<String> lore, Material material) {
-        super(name, displayName, ukey, lore, material);
+    public BuildWand(String name, String displayName, String ukey, List<String> lore, Material material, boolean glow) {
+        super(name, displayName, ukey, lore, material, glow);
     }
 
     @Override

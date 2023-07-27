@@ -1,6 +1,8 @@
 package me.emiel04.wildwands.items.wands;
 
 import me.emiel04.wildwands.WildWands;
+import me.emiel04.wildwands.items.PixieDust;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +10,12 @@ import java.util.List;
 public class WandManager {
     private final WildWands plugin;
     private final List<Wand> wands;
+    private final PixieDust pixieDust;
 
-    public WandManager(WildWands plugin, List<Wand> wands) {
+    public WandManager(WildWands plugin, List<Wand> wands, PixieDust dust) {
         this.plugin = plugin;
         this.wands = wands;
+        this.pixieDust = dust;
         addListeners();
     }
 
@@ -20,6 +24,7 @@ public class WandManager {
                 wands) {
             plugin.getServer().getPluginManager().registerEvents(w, plugin);
         }
+        plugin.getServer().getPluginManager().registerEvents(pixieDust, plugin);
     }
 
     public Wand get(WandType type) {
@@ -33,6 +38,15 @@ public class WandManager {
     }
 
     public List<String> getAllNames() {
+        List<String> names = new ArrayList<>();
+        for (Wand w :
+                wands) {
+            names.add(w.getName());
+        }
+        names.add(pixieDust.getName());
+        return names;
+    }
+    public List<String> getAllWandNames() {
         List<String> names = new ArrayList<>();
         for (Wand w :
                 wands) {
@@ -61,4 +75,8 @@ public class WandManager {
     public List<Wand> getWands() {
         return wands;
     }
+    public PixieDust getPixieDust() {
+        return pixieDust;
+    }
+
 }

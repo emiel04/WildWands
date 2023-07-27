@@ -27,8 +27,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class SellWand extends Wand {
-    public SellWand(String name, String displayName, String ukey, List<String> lore, Material material) {
-        super(name, displayName, ukey, lore, material);
+    public SellWand(String name, String displayName, String ukey, List<String> lore, Material material, boolean glow) {
+        super(name, displayName, ukey, lore, material, glow);
     }
 
     @Override

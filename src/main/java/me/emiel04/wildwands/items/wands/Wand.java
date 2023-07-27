@@ -1,14 +1,14 @@
 package me.emiel04.wildwands.items.wands;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.emiel04.wildwands.config.Lang;
 import me.emiel04.wildwands.config.LangConfig;
 import me.emiel04.wildwands.WildWands;
 import me.emiel04.wildwands.config.WandConfig;
 import me.emiel04.wildwands.utils.MessageSenderUtil;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,16 +28,18 @@ public abstract class Wand implements Listener {
     protected final String displayName;
     protected final String ukey;
     protected final List<String> lore;
-    protected final String WAND_IDENTIFIER = "wildwand-id";
-    protected final String WAND_IDENTIFIER_USES = "wildwand-uses";
+    protected static final String WAND_IDENTIFIER = "wildwand-id";
+    protected static final String WAND_IDENTIFIER_USES = "wildwand-uses";
     private final Material material;
+    private final boolean glow;
 
-    public Wand(String name, String displayName, String ukey, List<String> lore, Material material) {
+    public Wand(String name, String displayName, String ukey, List<String> lore, Material material, boolean glow) {
         this.name = name;
         this.displayName = displayName;
         this.ukey = ukey;
         this.lore = lore;
         this.material = material;
+        this.glow = glow;
     }
 
     public abstract WandType getType();
@@ -48,10 +50,21 @@ public abstract class Wand implements Listener {
 
     public ItemStack getItem(int uses) {
         ItemStack smeltWand = new ItemStack(material);
+        if (glow){
+            smeltWand.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+        }
         ItemMeta meta = smeltWand.getItemMeta();
+        if (meta == null) return new ItemStack(Material.AIR);
+        if (glow){
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+
         meta.setDisplayName(formatUses(displayName, uses));
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES);
+
+
+
         List<String> formattedLore = formatLore(lore, uses);
         meta.setLore(formattedLore);
 
@@ -87,7 +100,9 @@ public abstract class Wand implements Listener {
     }
 
     protected void useWand(Player p, ItemStack itemStack) {
+        if (itemStack.getItemMeta() == null) return;
         PersistentDataContainer pdc = itemStack.getItemMeta().getPersistentDataContainer();
+        if (!pdc.has(getUsesKey(), PersistentDataType.INTEGER)) return;
         int uses = pdc.get(getUsesKey(), PersistentDataType.INTEGER);
         if (uses < 0) {
             return;
@@ -113,23 +128,23 @@ public abstract class Wand implements Listener {
         p.getInventory().setItemInMainHand(itemStack);
     }
 
-    public String getUkey() {
-        return ukey;
-    }
 
     public String getDisplayName() {
         return displayName;
+    }
+    public String getDisplayName(int uses) {
+        return formatUses(getDisplayName(), uses);
     }
 
     public List<String> getLore() {
         return lore;
     }
 
-    public NamespacedKey getIdKey() {
+    public static NamespacedKey getIdKey() {
         return new NamespacedKey(WildWands.getInstance(), WAND_IDENTIFIER);
     }
 
-    public NamespacedKey getUsesKey() {
+    public static NamespacedKey getUsesKey() {
         return new NamespacedKey(WildWands.getInstance(), WAND_IDENTIFIER_USES);
     }
 
@@ -155,16 +170,17 @@ public abstract class Wand implements Listener {
         String key = wandType.getKey();
         List<String> lore = WandConfig.getLore(wandType);
         Material material = WandConfig.getMaterial(wandType);
+        Boolean glow = WandConfig.hasGlow(wandType);
 
         switch (wandType) {
             case SMELT_WAND:
-                return new SmeltWand(name, displayName, key, lore, material);
+                return new SmeltWand(name, displayName, key, lore, material, glow);
             case CONDENSE_WAND:
-                return new CondenseWand(name, displayName, key, lore, material);
+                return new CondenseWand(name, displayName, key, lore, material, glow);
             case SELL_WAND:
-                return new SellWand(name, displayName, key, lore, material);
+                return new SellWand(name, displayName, key, lore, material, glow);
             case BUILD_WAND:
-                return new BuildWand(name, displayName, key, lore, material);
+                return new BuildWand(name, displayName, key, lore, material, glow);
             default:
                 throw new IllegalArgumentException("Invalid wand type: " + wandType);
         }

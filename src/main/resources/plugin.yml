@@ -10,3 +10,12 @@ commands:
     aliases:
       - ww
     usage: /<command>
+permissions:
+  wildwands.give:
+    description: Allows someone to give a plugin item to themselves.
+    default: op
+    children:
+      - wildwands.give.others
+  wildwands.give.others:
+    description: Allows someone to give a plugin item to someone else.
+    default: op

@@ -23,8 +23,8 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.*;
 
 public class SmeltWand extends Wand {
-    public SmeltWand(String name, String displayName, String ukey, List<String> lore, Material material) {
-        super(name, displayName, ukey, lore, material);
+    public SmeltWand(String name, String displayName, String ukey, List<String> lore, Material material, boolean glow) {
+        super(name, displayName, ukey, lore, material, glow);
     }
 
     @Override

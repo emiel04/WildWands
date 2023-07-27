@@ -44,6 +44,7 @@ public class WandConfig {
         configuration.set(section + ".displayname", wand.getDefaultDisplayName());
         configuration.set(section + ".material", wand.getDefaultMaterial().toString());
         configuration.set(section + ".lore", wand.getDefaultLore());
+        configuration.set(section + ".glow", wand.hasGlow());
     }
 
     public static FileConfiguration getConfiguration() {
@@ -72,7 +73,10 @@ public class WandConfig {
         String section = getSection(type);
         return configuration.getStringList(section + ".lore");
     }
-
+    public static Boolean hasGlow(WandType type) {
+        String section = getSection(type);
+        return configuration.getBoolean(section + ".glow");
+    }
 
     private static String getSection(WandType type){
         return "wands." + type.getKey();
@@ -87,7 +91,8 @@ public class WandConfig {
         }catch (IllegalArgumentException e){
             plugin.getLogger().severe("Invalid material provided: " + strMaterial);
         }
-        Bukkit.broadcastMessage(material.toString());
         return material;
     }
+
+
 }

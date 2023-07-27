@@ -4,11 +4,12 @@ import me.emiel04.wildwands.commands.WildWandCommand;
 import me.emiel04.wildwands.commands.commandmanagerlib.argumentmatchers.ContainingStringIArgumentMatcher;
 import me.emiel04.wildwands.config.Lang;
 import me.emiel04.wildwands.config.LangConfig;
+import me.emiel04.wildwands.config.NormalConfig;
 import me.emiel04.wildwands.config.WandConfig;
+import me.emiel04.wildwands.items.PixieDust;
 import me.emiel04.wildwands.items.wands.*;
 import me.emiel04.wildwands.utils.EssUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import net.milkbowl.vault.economy.Economy;
@@ -16,7 +17,6 @@ import net.milkbowl.vault.economy.Economy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 public final class WildWands extends JavaPlugin {
 
@@ -64,6 +64,7 @@ public final class WildWands extends JavaPlugin {
         addCommandsAndListeners();
 
     }
+
     private void initializeWands() {
         List<Wand> wands = new ArrayList<>(Arrays.asList(
                 Wand.createWand(WandType.SMELT_WAND),
@@ -74,9 +75,8 @@ public final class WildWands extends JavaPlugin {
             Wand wand = Wand.createWand(WandType.SELL_WAND);
             wands.add(wand);
         }
-
-        Bukkit.broadcastMessage(wands.get(0).toString());
-        wandManager = new WandManager(this, wands);
+        PixieDust dust = new PixieDust(NormalConfig.getName(), NormalConfig.getDisplayName(), NormalConfig.getLore(), NormalConfig.getMaterial(),NormalConfig.getGlow());
+        wandManager = new WandManager(this, wands, dust);
     }
 
     private void addCommandsAndListeners() {

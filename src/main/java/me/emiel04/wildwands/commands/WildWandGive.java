@@ -4,6 +4,7 @@ import me.emiel04.wildwands.WildWands;
 import me.emiel04.wildwands.commands.commandmanagerlib.SubCommand;
 import me.emiel04.wildwands.config.Lang;
 import me.emiel04.wildwands.config.LangConfig;
+import me.emiel04.wildwands.items.PixieDust;
 import me.emiel04.wildwands.items.wands.Wand;
 import me.emiel04.wildwands.utils.MessageSenderUtil;
 import org.bukkit.Bukkit;
@@ -32,7 +33,7 @@ public class WildWandGive implements SubCommand {
 
     @Override
     public String getPermission() {
-        return "wildwands.get";
+        return "wildwands.give";
     }
 
     @Override
@@ -65,7 +66,7 @@ public class WildWandGive implements SubCommand {
             new WildWandHelp().perform(sender, args);
             return;
         }
-        String playerName = args[0], wandArg = args[1], amountArg = args[2], usesArg = args[3];
+        String playerName = args[0], itemArg = args[1], amountArg = args[2], usesArg = args[3];
         if (!MessageSenderUtil.isInteger(amountArg)){
             MessageSenderUtil.sendErrorWithPrefix(sender, "Amount must be an integer!");
             return;
@@ -74,29 +75,69 @@ public class WildWandGive implements SubCommand {
             MessageSenderUtil.sendErrorWithPrefix(sender, "Uses must be an integer!");
             return;
         }
-        if (!WildWands.getWandManager().getAllNames().contains(wandArg)){
-            MessageSenderUtil.sendErrorWithPrefix(sender, "That wand was not found!");
-            return;
-        }
+
         Player target = Bukkit.getPlayer(playerName);
         if (target == null || !target.isOnline()){
             MessageSenderUtil.sendErrorWithPrefix(sender, "That player is not online!");
             return;
         }
+        if (sender instanceof Player){
+            Player p = (Player) sender;
+            if (!p.getUniqueId().equals(target.getUniqueId())){
+                if (!p.hasPermission("wildwands.give.others")){
+                    MessageSenderUtil.sendErrorWithPrefix(sender, "You do not have the permission to give to another player!");
+                    return;
+                }
+            }
+        }
+
+        if (!WildWands.getWandManager().getAllNames().contains(itemArg)){
+            MessageSenderUtil.sendErrorWithPrefix(sender, "That wand was not found!");
+            return;
+        }else if(WildWands.getWandManager().getPixieDust().getName().equals(itemArg)){
+            handlePixieDust(sender, playerName, amountArg, usesArg);
+            return;
+        }
+
         int amount = Integer.parseInt(amountArg), uses = Integer.parseInt(usesArg);
-        Wand wand = WildWands.getWandManager().getWandByName(wandArg);
+        Wand wand = WildWands.getWandManager().getWandByName(itemArg);
         for (int i = 0; i < amount; i++) {
             target.getInventory().addItem(wand.getItem(uses));
         }
         MessageSenderUtil.sendMessageWithPrefix(sender,
                 LangConfig.get(Lang.GIVEN_WAND)
                         .replace("%wand%", wand.getName())
-                        .replace("%uses%", ""+uses)
+                        .replace("%uses%", String.valueOf(uses))
                         .replace("%target%", target.getDisplayName()));
         MessageSenderUtil.sendMessageWithPrefix(target,
                 LangConfig.get(Lang.RECEIVED_WAND)
                         .replace("%wand%", wand.getName())
-                        .replace("%uses%", ""+uses));
+                        .replace("%uses%", String.valueOf(uses)));
 
     }
+
+    private void handlePixieDust(CommandSender sender, String playerName, String amountArg, String usesArg) {
+        int amount = Integer.parseInt(amountArg), uses = Integer.parseInt(usesArg);
+        PixieDust pixieDust =  WildWands.getWandManager().getPixieDust();
+
+        Player target = Bukkit.getPlayer(playerName);
+        if (target == null || !target.isOnline()){
+            MessageSenderUtil.sendErrorWithPrefix(sender, "That player is not online!");
+            return;
+        }
+        for (int i = 0; i < amount; i++) {
+            target.getInventory().addItem(pixieDust.getItem(uses));
+        }
+
+        MessageSenderUtil.sendMessageWithPrefix(sender,
+                LangConfig.get(Lang.GIVEN_DUST)
+                        .replace("%name%", pixieDust.getName())
+                        .replace("%uses%", String.valueOf(uses))
+                        .replace("%target%", target.getDisplayName()));
+        MessageSenderUtil.sendMessageWithPrefix(target,
+                LangConfig.get(Lang.RECEIVED_DUST)
+                        .replace("%name%", pixieDust.getName())
+                        .replace("%uses%", String.valueOf(uses)));
+    }
+
 }
